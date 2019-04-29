@@ -1,21 +1,38 @@
 package data;
 
+
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class UserDAOImpl implements IUserDAO {
-    private Connection createConnection() throws SQLException {
-        return  DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/db02327?"
-                + "user=db02327&password=db02327");
+
+    private Connection connection = createConnection();
+    private Map<Integer, IUserDTO> cache = new HashMap<>();
+
+
+    private Connection createConnection(){
+        Connection conn= null;
+
+        try{
+            conn = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/db02327?"
+                    + "user=db02327&password=db02327");
+        } catch (SQLException se){
+
+        }
+        return  conn;
     }
 
     @Override
     public IUserDTO getUser(int userId) throws DALException {
 
-        //TODO refactor so connection stays open!!
-        try (Connection connection = createConnection()){
+        /******* Caching ***********/
+        IUserDTO user = cache.get(userId);
+        if (user != null){
+            return user;
+        }
+
+
+        try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users WHERE userid = " + userId);
             if (resultSet.next()) {
@@ -36,7 +53,14 @@ public class UserDAOImpl implements IUserDAO {
         user.setUserId(resultSet.getInt("userId"));
         List<String> roles = Arrays.asList(resultSet.getString("roles").split(";"));
         user.setRoles(roles);
+
+        putUserToCache(user);
+
         return user;
+    }
+
+    private void putUserToCache(IUserDTO user) {
+        cache.put(user.getUserId(), user);
     }
 
     @Override
