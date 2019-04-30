@@ -10,12 +10,13 @@ public class UserDAOImpl implements IUserDAO {
 
 
     private Map<Integer, IUserDTO> cache = new HashMap<>();
-    private Connection connection = createConnection(); // linked list with 20 connections.
+    //private Connection connection = createConnection(); // linked list with 20 connections.
 
 
     public UserDAOImpl(){
         for(int i = 0; i < 10; i++){
-
+            Connection connection = createConnection();
+            connections.add(connection);
         }
     }
 
@@ -39,6 +40,7 @@ public class UserDAOImpl implements IUserDAO {
         if (user != null){
             return user;
         }*/
+     Connection connection = connections.removeFirst();
 
 
         try {
@@ -54,6 +56,10 @@ public class UserDAOImpl implements IUserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DALException(e.getMessage());
+        } finally {
+            if(connection != null){
+                connections.addLast(connection);
+            }
         }
 
     }

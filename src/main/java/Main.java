@@ -16,8 +16,10 @@ public class Main {
             userDAO.getUser(1);
         }*/
 
-        PrintUser printUser = new PrintUser(userDAO);
-        (new Thread(printUser)).start();
+        PrintUser printUser1 = new PrintUser(userDAO,1);
+        (new Thread(printUser1)).start();
+        PrintUser printUser2 = new PrintUser(userDAO,2);
+        (new Thread(printUser2)).start();
 
 
         long end = System.currentTimeMillis();
