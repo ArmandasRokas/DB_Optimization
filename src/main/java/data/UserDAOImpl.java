@@ -6,9 +6,18 @@ import java.util.*;
 
 public class UserDAOImpl implements IUserDAO {
 
-    private Connection connection = createConnection();
-    private Map<Integer, IUserDTO> cache = new HashMap<>();
+    private LinkedList<Connection> connections = new LinkedList<>();
 
+
+    private Map<Integer, IUserDTO> cache = new HashMap<>();
+    private Connection connection = createConnection(); // linked list with 20 connections.
+
+
+    public UserDAOImpl(){
+        for(int i = 0; i < 10; i++){
+
+        }
+    }
 
     private Connection createConnection(){
         Connection conn= null;
@@ -26,14 +35,17 @@ public class UserDAOImpl implements IUserDAO {
     public IUserDTO getUser(int userId) throws DALException {
 
         /******* Caching ***********/
-        IUserDTO user = cache.get(userId);
+     /*   IUserDTO user = cache.get(userId);
         if (user != null){
             return user;
-        }
+        }*/
 
 
         try {
-            Statement statement = connection.createStatement();
+            if (!connection.isValid(100)){
+                connection = createConnection();
+            }
+            Statement statement = connection.createStatement(); // threading
             ResultSet resultSet = statement.executeQuery("SELECT * FROM users WHERE userid = " + userId);
             if (resultSet.next()) {
                 return makeUserFromResultSet(resultSet);
