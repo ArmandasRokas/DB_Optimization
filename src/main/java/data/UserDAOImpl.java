@@ -6,17 +6,20 @@ import java.util.*;
 
 public class UserDAOImpl implements IUserDAO {
 
-    private LinkedList<Connection> connections = new LinkedList<>();
+  //  private LinkedList<ConnectionWithIndex> connections = new LinkedList<>();
 
+    private LinkedList<Connection> connections = new LinkedList<>();
 
     private Map<Integer, IUserDTO> cache = new HashMap<>();
     //private Connection connection = createConnection(); // linked list with 20 connections.
 
 
     public UserDAOImpl(){
-        for(int i = 0; i < 10; i++){
-            Connection connection = createConnection();
-            connections.add(connection);
+//        for(int i = 0; i < 25; i++){
+//            connections.add(new ConnectionWithIndex(i, createConnection()));
+//        }
+                for(int i = 0; i < 10; i++){
+            connections.add(createConnection());
         }
     }
 
@@ -40,10 +43,24 @@ public class UserDAOImpl implements IUserDAO {
         if (user != null){
             return user;
         }*/
-     Connection connection = connections.removeFirst();
+
+   //  ConnectionWithIndex connectionWithIndex = connections.removeFirst();
+   //  Connection connection = connectionWithIndex.getConnection();
+    //    System.out.println("Connection index: " + connectionWithIndex.getIndex() + " for " + userId);
+
+        Connection connection;
+        if(!connections.isEmpty()){
+            connection = connections.removeFirst();
+        } else{
+            connection = createConnection();
+        }
 
 
         try {
+            if(connection == null){
+                connection = createConnection();
+            }
+
             if (!connection.isValid(100)){
                 connection = createConnection();
             }
@@ -58,6 +75,7 @@ public class UserDAOImpl implements IUserDAO {
             throw new DALException(e.getMessage());
         } finally {
             if(connection != null){
+              //  connections.addLast(connectionWithIndex);
                 connections.addLast(connection);
             }
         }

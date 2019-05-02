@@ -16,11 +16,12 @@ public class Main {
             userDAO.getUser(1);
         }*/
 
-        PrintUser printUser1 = new PrintUser(userDAO,1);
-        (new Thread(printUser1)).start();
-        PrintUser printUser2 = new PrintUser(userDAO,2);
-        (new Thread(printUser2)).start();
 
+
+        for (int i = 0; i < 20; i++) {
+            PrintUser printUser1 = new PrintUser(userDAO,1);
+            (new Thread(printUser1)).start();
+        }
 
         long end = System.currentTimeMillis();
         System.out.println("Time Elapsed: " + (double)(end-start)/1000 + "seconds");
