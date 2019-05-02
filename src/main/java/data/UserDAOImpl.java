@@ -6,9 +6,11 @@ import java.util.*;
 
 public class UserDAOImpl implements IUserDAO {
 
-  //  private LinkedList<ConnectionWithIndex> connections = new LinkedList<>();
+//    private LinkedList<ConnectionWithIndex> connections = new LinkedList<>();
 
-    private LinkedList<Connection> connections = new LinkedList<>();
+//    private LinkedList<Connection> connections = new LinkedList<>();
+    private Connection connection = createConnection();
+
 
     private Map<Integer, IUserDTO> cache = new HashMap<>();
     //private Connection connection = createConnection(); // linked list with 20 connections.
@@ -18,9 +20,9 @@ public class UserDAOImpl implements IUserDAO {
 //        for(int i = 0; i < 25; i++){
 //            connections.add(new ConnectionWithIndex(i, createConnection()));
 //        }
-                for(int i = 0; i < 10; i++){
-            connections.add(createConnection());
-        }
+//                for(int i = 0; i < 10; i++){
+//            connections.add(createConnection());
+//        }
     }
 
     private Connection createConnection(){
@@ -30,7 +32,7 @@ public class UserDAOImpl implements IUserDAO {
             conn = DriverManager.getConnection("jdbc:mysql://ec2-52-30-211-3.eu-west-1.compute.amazonaws.com/db02327?"
                     + "user=db02327&password=db02327");
         } catch (SQLException se){
-
+            se.printStackTrace();
         }
         return  conn;
     }
@@ -48,18 +50,30 @@ public class UserDAOImpl implements IUserDAO {
    //  Connection connection = connectionWithIndex.getConnection();
     //    System.out.println("Connection index: " + connectionWithIndex.getIndex() + " for " + userId);
 
-        Connection connection;
-        if(!connections.isEmpty()){
-            connection = connections.removeFirst();
-        } else{
-            connection = createConnection();
-        }
+//        Connection connection;
+//        if(!connections.isEmpty()){
+//            connection = connections.removeFirst();
+//        } else{
+//            connection = createConnection();
+//        }
+
+//        while(connections.isEmpty()){
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        Connection connection = connections.removeFirst();
+
+
 
 
         try {
-            if(connection == null){
-                connection = createConnection();
-            }
+//            if(connection == null){
+//                connection = createConnection();
+//            }
 
             if (!connection.isValid(100)){
                 connection = createConnection();
@@ -76,7 +90,7 @@ public class UserDAOImpl implements IUserDAO {
         } finally {
             if(connection != null){
               //  connections.addLast(connectionWithIndex);
-                connections.addLast(connection);
+//                connections.addLast(connection);
             }
         }
 
