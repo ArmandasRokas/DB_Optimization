@@ -8,8 +8,8 @@ public class UserDAOImpl implements IUserDAO {
 
 //    private LinkedList<ConnectionWithIndex> connections = new LinkedList<>();
 
-//    private LinkedList<Connection> connections = new LinkedList<>();
-    private Connection connection = createConnection();
+    private LinkedList<Connection> connections = new LinkedList<>();
+//    private Connection connection = createConnection();
 
 
     private Map<Integer, IUserDTO> cache = new HashMap<>();
@@ -20,9 +20,9 @@ public class UserDAOImpl implements IUserDAO {
 //        for(int i = 0; i < 25; i++){
 //            connections.add(new ConnectionWithIndex(i, createConnection()));
 //        }
-//                for(int i = 0; i < 10; i++){
-//            connections.add(createConnection());
-//        }
+                for(int i = 0; i < 10; i++){
+            connections.add(createConnection());
+        }
     }
 
     private Connection createConnection(){
@@ -65,7 +65,7 @@ public class UserDAOImpl implements IUserDAO {
 //            }
 //        }
 //
-//        Connection connection = connections.removeFirst();
+        Connection connection = connections.removeFirst();
 
 
 
@@ -90,7 +90,7 @@ public class UserDAOImpl implements IUserDAO {
         } finally {
             if(connection != null){
               //  connections.addLast(connectionWithIndex);
-//                connections.addLast(connection);
+                connections.addLast(connection);
             }
         }
 
